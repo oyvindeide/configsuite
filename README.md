@@ -5,6 +5,7 @@
 [![MIT license](http://img.shields.io/badge/license-MIT-brightgreen.svg)](http://opensource.org/licenses/MIT)
 
 ## Introduction ##
+_Config Suite_ is the result of recognizing the complexity of software configuration, both from a user and developer perspective. And our main goal is to be transparent about this complexity. In particular we aim at providing the user with confirmation when a valid configuration is given, concrete assistance when the configuration is not valid and up-to-date documentation to assist in this work. For a developer we aim at providing a suite that will handle configuration validity with multiple sources of data in seamless manner, completely remove the burden of special casing and validity checking and automatically generate documentation that is up to date. We also believe that by dealing with the complexity of formally verifying a configuration early in development leads to a better design of your configuration layout.
 
 ## Features ##
 
