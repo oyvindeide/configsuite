@@ -16,6 +16,35 @@ _Config Suite_ is the result of recognizing the complexity of software configura
 
 ## Examples ##
 
+#### A first glance ####
+For now we will just assume that we have a schema that describes the expected
+input. Informally say that we have a very simple configuration where one can
+specify ones name and hobby, i.e:
+
+```yaml
+name: Espen Askeladd
+hobby: Collecting stuff
+```
+
+Note that although in this example the configuration is written in `Yaml` there
+are no restrictions with respect to format as you are responsible for parsing
+the content yourself. Hence, it can be input to an API, written as `Yaml`,
+`Json` or whatever fits your project.
+
+You can then instantiate a suite as follows:
+
+```python
+import configsuite
+
+# ... fetch configuration
+
+suite = configsuite.ConfigSuite(input_config, schema)
+```
+
+#### Schema ####
+
+
+#### Schema ####
 
 ## Future ##
 Have a look at the epics and issues in the _GitHub_ (repository)[https://github.com/equinor/configsuite/issues].
