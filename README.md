@@ -64,10 +64,60 @@ And if feed the example configuration above the output would be:
 Congratulations Espen Askelad! The config is valid. Go collect stuff.
 ```
 
-However, if we changed the value of `name` to `13` (or ever worse `[My, name, is kind, of odd]`) we would expect the suite to not contain a valid configuration and hence that the output would be `Sorry, the configuration is invalid`.
+However, if we changed the value of `name` to `13` (or even worse `[My, name, is kind, of odd]`) we would expect the configuration to be invalid and hence that the output would be `Sorry, the configuration is invalid`. And as useful as this is it would be even better to gain more detailed information about the errors.
+
+```
+print(suite.errors)
+(InvalidTypeError(msg=Is x a string is false on input 13, key_path=('hobby',), layer=None),)
+```
+
+```python
+if suite.valid:
+    msg = "Congratulations {name}! The config is valid. Go {hobby}."
+    print(msg.format(name=suite.snapshot.name, hobby=suite.snapshot.hobby))
+else:
+    print("Sorry, the configuration is invalid.")
+```
 
 
-#### Schema ####
+#### A first schema ####
+TODO
+
+```python
+schema = {
+    MK.Type: types.NamedDict,
+    MK.Content: {
+        "name": {MK.Type: types.String},
+        "hobby": {MK.Type: types.String},
+    }
+}
+```
+
+#### Required values ####
+
+#### Lists ####
+TODO
+
+#### Named Dicts ####
+TODO
+
+#### Dicts ####
+TODO
+
+#### Readable ####
+TODO
+
+#### Documentation generation ####
+TODO
+
+#### Element validators ####
+TODO
+
+#### Creating your own types ####
+TODO
+
+#### Layers ####
+TODO
 
 ## Future ##
 Have a look at the epics and issues in the _GitHub_ (repository)[https://github.com/equinor/configsuite/issues].
