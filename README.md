@@ -36,6 +36,16 @@ import configsuite
 suite = configsuite.ConfigSuite(input_config, schema)
 ```
 
+You can now check whether data provided in `input_config` is valid by accessing
+`suite.valid`.
+
+```python
+if suite.valid:
+    print("Congratulations! The config is valid.")
+else:
+    print("Sorry, the configuration is invalid.")
+```
+
 #### Schema ####
 
 
