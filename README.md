@@ -23,7 +23,7 @@ specify ones name and hobby, i.e:
 
 ```yaml
 name: Espen Askeladd
-hobby: Collecting stuff
+hobby: collecting stuff
 ```
 
 You can then instantiate a suite as follows:
@@ -45,6 +45,26 @@ if suite.valid:
 else:
     print("Sorry, the configuration is invalid.")
 ```
+
+Now, given that the configuration is indeed valid you would probably like to
+access the data. This can be done via the `ConfigSuite` member named
+`snapshot`. Hence, we could change our example above to:
+
+```python
+if suite.valid:
+    msg = "Congratulations {name}! The config is valid. Go {hobby}."
+    print(msg.format(name=suite.snapshot.name, hobby=suite.snapshot.hobby))
+else:
+    print("Sorry, the configuration is invalid.")
+```
+
+And if feed the example configuration above the output would be:
+
+```python
+Congratulations Espen Askelad! The config is valid. Go collect stuff.
+```
+
+
 
 #### Schema ####
 
