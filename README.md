@@ -26,17 +26,12 @@ name: Espen Askeladd
 hobby: Collecting stuff
 ```
 
-Note that although in this example the configuration is written in `Yaml` there
-are no restrictions with respect to format as you are responsible for parsing
-the content yourself. Hence, it can be input to an API, written as `Yaml`,
-`Json` or whatever fits your project.
-
 You can then instantiate a suite as follows:
 
 ```python
 import configsuite
 
-# ... fetch configuration
+# ... fetch input_config
 
 suite = configsuite.ConfigSuite(input_config, schema)
 ```
