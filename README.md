@@ -64,7 +64,7 @@ And if feed the example configuration above the output would be:
 Congratulations Espen Askelad! The config is valid. Go collect stuff.
 ```
 
-However, if we changed the value of `name` to `13` (or ever worse '[My, name, is kind, of odd]') we would expect the suite to not contain a valid configuration and hence that the output would be `Sorry, the configuration is invalid`.
+However, if we changed the value of `name` to `13` (or ever worse `[My, name, is kind, of odd]`) we would expect the suite to not contain a valid configuration and hence that the output would be `Sorry, the configuration is invalid`.
 
 
 #### Schema ####
