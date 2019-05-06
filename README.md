@@ -298,12 +298,12 @@ config = {
     },
     "cars": [
         {
-          "brand": Belchfire Runabout
-          first_registered: 1938-07-01
+          "brand": "Belchfire Runabout",
+          "first_registered": datetime.Date(1938, 07, 01),
         },
         {
-          "brand": Duckworth
-          first_registered: 187-09-18
+          "brand": "Duckworth",
+          "first_registered": datetime.Date(1987, 09, 18),
         },
     ]
 }
