@@ -395,18 +395,28 @@ also are invalid.
 #### Required values ####
 TODO
 
-#### Documentation generation ####
+#### Validators ####
+##### Element validators #####
 TODO
 
-#### Element validators ####
-TODO
-
-#### Creating your own types ####
+##### Context validators #####
 TODO
 
 #### Layers ####
 TODO
 
+#### Creating your own types ####
+TODO
+
 #### Transformations ####
+##### Transformations #####
+TODO
 
+##### Context transformations #####
+TODO
 
+##### Layer transformations #####
+TODO
+
+#### Documentation generation ####
+TODO
