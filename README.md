@@ -31,7 +31,8 @@ You can then instantiate a suite as follows:
 ```python
 import configsuite
 
-# ... fetch input_config
+with open('config.yml') as f:
+    input_config = yaml.load(f)
 
 suite = configsuite.ConfigSuite(input_config, schema)
 ```
@@ -81,9 +82,11 @@ else:
 
 
 #### A first schema ####
-TODO
 
 ```python
+from configsuite import types
+from configsuite import MetaKeys as MK
+
 schema = {
     MK.Type: types.NamedDict,
     MK.Content: {
@@ -93,12 +96,13 @@ schema = {
 }
 ```
 
-#### Required values ####
-
-#### Lists ####
+#### Basic types ####
 TODO
 
 #### Named Dicts ####
+TODO
+
+#### Lists ####
 TODO
 
 #### Dicts ####
@@ -106,6 +110,8 @@ TODO
 
 #### Readable ####
 TODO
+
+#### Required values ####
 
 #### Documentation generation ####
 TODO
@@ -118,6 +124,8 @@ TODO
 
 #### Layers ####
 TODO
+
+#### Transformations ####
 
 ## Future ##
 Have a look at the epics and issues in the _GitHub_ (repository)[https://github.com/equinor/configsuite/issues].
