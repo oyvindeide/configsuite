@@ -175,17 +175,17 @@ schema = {
     MK.Type: types.NamedDict,
     MK.Content: {
         "owner": {
-            MK.Type: types.NamedDict,
+            MK.type: types.NamedDict,
             MK.Content: {
-                "name": {MK.Type: types.String},
-                "credit": {MK.Type: types.Integer},
-                "insured": {MK.Type: types.Bool},
+                "name": {MK.type: types.String},
+                "credit": {MK.type: types.Integer},
+                "insured": {MK.type: types.Bool},
             },
         },
         "car": {
             MK.Type: types.NamedDict,
             MK.Content: {
-                "brand": {MK.Type: types.String},
+                "brand": {MK.type: types.String},
                 "first_registered": {MK.Type: types.Date}
             },
         },
@@ -193,24 +193,24 @@ schema = {
 }
 ```
 
-The above example describes a configuration describing both an `owner` and a
-`car`. For the `owner` the `name`, `credit` and whether she is `insured` is to
+the above example describes a configuration describing both an `owner` and a
+`car`. for the `owner` the `name`, `credit` and whether she is `insured` is to
 be specified, while for the `car` the `brand` and date it was
-`first_registered` is specified. A valid configuration could look something
+`first_registered` is specified. a valid configuration could look something
 like this:
 
 ```yaml
 owner:
-  name: Donald Duck
+  name: donald duck
   credit: -1000
-  insured: True
+  insured: true
 
 car:
   brand: Belchfire Runabout
   first_registered: 1938-07-01
 ```
 
-And now, we could validate and access the data as follows:
+and now, we could validate and access the data as follows:
 
 ```python
 # ... configuration is loaded into 'input_config' ...
@@ -218,14 +218,106 @@ And now, we could validate and access the data as follows:
 suite = configsuite.ConfigSuite(input_config, schema)
 
 if suite.valid:
-    print("Name of owner is {}".format(suite.owner.name))
-    print("Car was first registered {}".format(suite.car.first_registered))
+    print("name of owner is {}".format(suite.snapshot.owner.name))
+    print("car was first registered {}".format(suite.snapshot.car.first_registered))
 ```
 
 Notice that since keys in a named dict are made attributes in the snapshot,
 they all have to be valid Python variable names.
 
 ##### List #####
+Another supported container is the `List`. The data should be bundled together
+either in a Python `list` or a `tuple`. A very concrete difference of a Config
+Suite list and a Python list is that in Config Suite all elements are expected
+to be of the same type. This makes for an easier format for the user as well as
+the programmer when one is dealing with configurations. A very simple example
+representing a list of integers would be as follows:
+
+```python
+import configsuite
+from configsuite import types
+from configsuite import MetaKeys as MK
+
+schema = {
+    MK.Types: types.List,
+    MK.Content: {
+        MK.Item: {
+            MK.Type: types.Integer,
+        },
+    },
+}
+
+config = [1, 1, 2, 3, 5, 7, 13]
+
+suite = configsuite.ConfigSuite(config, schema)
+
+if suite.valid:
+    for idx, value in enumerate(suite.snapshot):
+        print("config[{}] is {}".format(idx, value))
+```
+
+A more complex example can be made by considering our example from the
+`NamedDict` section and imagining that an `owner` could have multiple `cars`
+that was to be contained in a list.
+
+```python
+from configsuite import types
+from configsuite import MetaKeys as MK
+
+schema = {
+    MK.Type: types.NamedDict,
+    MK.Content: {
+        "owner": {
+            MK.type: types.NamedDict,
+            MK.Content: {
+                "name": {MK.type: types.String},
+                "credit": {MK.type: types.Integer},
+                "insured": {MK.type: types.Bool},
+            },
+        },
+        "cars": {
+            MK.Type: types.List,
+            MK.Content: {
+                MK.Item: {
+                    MK.Type: types.NamedDict,
+                    MK.Content: {
+                        "brand": {MK.type: types.String},
+                        "first_registered": {MK.Type: types.Date}
+                    },
+                },
+            },
+        },
+    },
+}
+
+config = {
+    "owner": {
+      "name": donald duck,
+      "credit": -1000,
+      "insured": True,
+    },
+    "cars": [
+        {
+          "brand": Belchfire Runabout
+          first_registered: 1938-07-01
+        },
+        {
+          "brand": Duckworth
+          first_registered: 187-09-18
+        },
+    ]
+}
+
+suite = configsuite.ConfigSuite(config, schema)
+
+if suite.valid:
+    print("name of owner is {}".format(suite.snapshot.owner.name))
+    for car in suite.snapshot.cars:
+        print("- {}".format(car.brand))
+```
+
+Notice that `suite.snapshot.cars` is returned as a `tuple`-like structure. It
+is iterable, indexable (`suite.snapshot.cars[0]`) and immutable.
 
 ##### Dict #####
 
