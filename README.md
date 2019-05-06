@@ -320,7 +320,45 @@ Notice that `suite.snapshot.cars` is returned as a `tuple`-like structure. It
 is iterable, indexable (`suite.snapshot.cars[0]`) and immutable.
 
 ##### Dict #####
+The last of the data structures is the `Dict`. Contrary to the `NamedDict` one
+does not need to know the keys upfront and in addition the keys can be of other
+types than just `strings`. However, the restriction is that all the keys needs
+to be of the same type and all the values needs to be of the same type. The
+rationale for this is similar to that one of the list. Uniform types for
+arbitrary sized configurations are easier and better, both for the user and the
+programmer. A simple example mapping animals to frequencies are displayed below.
 
+```python
+import configsuite
+from configsuite import types
+from configsuite import MetaKeys as MK
+
+schema = {
+    MK.Type: types.Dict,
+    MK.Content: {
+        MK.Key: {MK.Type: types.String},
+        MK.Value: {MK.Type: types.Integer},
+    },
+}
+
+config = {
+    "monkey": 13,
+    "donkey": 16,
+    "horse": 28,
+}
+
+suite = configsuite.ConfigSuite(config, schema)
+assert suite.valid:
+
+for animal, frequency in suite.snapshot:
+    print("{} was observed {} times".format(animal, frequency))
+```
+
+As you can see, the elements of a `Dict` is accessible in `(key, value)` pairs
+in the same manner `dict.items` would provide for a Python dictionary. The
+reason for not supporting indexing by key is `Dict`, contrary to `NamedDict`,
+is for dictionaries with an unknown set of keys. Hence, processing them as
+key-value-pairs is the only rational thing to do.
 
 #### Readable ####
 TODO
