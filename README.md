@@ -14,9 +14,29 @@ _Config Suite_ is the result of recognizing the complexity of software configura
 - Support for multiple data sources, yielding the possibility of default values as well as user and workspace configurations on top of the current configuration.
 - Generating documentation that adheres to the technical requirements.
 
-## Examples ##
+## Future ##
+Have a look at the epics and issues in the _GitHub_ (repository)[https://github.com/equinor/configsuite/issues].
 
-#### A first glance ####
+## Installation ##
+The simplest way to fetch the newest version of _Config Suite_ is via [PyPI](https://pypi.python.org/pypi/configsuite/).
+
+`pip install configsuite`
+
+## Developer guidelines ##
+Contributions to _Config Suite_ is very much welcome! Bug reports, feature requests and improvements to the documentation or code alike. However, if you are planning a bigger chunk of work or to introduce a concept, initiating a discussion in an issue is encouraged.
+
+#### Running the tests ####
+The tests can be executed with `python setup.py test`. Note that the code formatting tests will only be executed with Python `3.6` or higher.
+
+#### Code formatting ####
+The entire code base is formatted with [black](https://black.readthedocs.io/en/stable/).
+
+#### Pull request expectations ####
+We expect a well-written explanation for smaller PR's and a reference to an issue for larger contributions. In addition, we expect the tests to pass on all commits and the commit messages to be written in imperative style. For more on commit messages read [this](https://chris.beams.io/posts/git-commit/).
+
+## Documentation ##
+
+### A first glance ###
 For now we will just assume that we have a schema that describes the expected
 input. Informally say that we have a very simple configuration where one can
 specify ones name and hobby, i.e:
@@ -80,8 +100,11 @@ else:
     print("Sorry, the configuration is invalid.")
 ```
 
-
 #### A first schema ####
+
+The below schema is indeed the one used in our example above. It consists of a
+single collection containing the two keys `name` and `hobby`, both of which
+value should be a string.
 
 ```python
 from configsuite import types
@@ -96,22 +119,122 @@ schema = {
 }
 ```
 
+Notice the usage of the meta key `Type` to specify the type of a specific
+element and the usage of `Content` to specify the content of a container.
+
+#### Configuration readiness ####
+A very central concept in _configsuite_ is that of configuration readiness.
+Given that our configuration is indeed valid we can trust that `suite.snapshot`
+will describe all values as defined in the schema and that all the values are
+valid. Hence, we do not need to check for availability nor correctness of the
+configuration.
+
+### Types ###
+In _configsuite_ we differentiate between `basic types` and `collections`.
+Basic types are single valued entities, while collections are data structures
+that can hold multiple basic types. In our first example the entire
+configuration was considered a collection (of type `Named dict`), while `name`
+and `hobby` are basic types. And while you can define arbitrary `basic types`,
+one cannot create new `collections` while using _Config Suite_.
+
 #### Basic types ####
-TODO
 
-#### Named Dicts ####
-TODO
+##### String #####
+We have already seen the usage of the `String` type above. It basically accepts
+everything considered a string in Python (defined by `six.string_types`).
 
-#### Lists ####
-TODO
+##### Integer #####
+An `Integer` is as the name suggests an integer.
 
-#### Dicts ####
-TODO
+##### Number #####
+When a `Number` is specified any integer or floating point value is accepted.
+
+##### Bool #####
+Both boolean values `True` and `False` are accepted.
+
+##### Date #####
+A date in specified in ISO-format, `[YYYY]-[MM]-[DD]` that is.
+
+##### DateTime #####
+A date and time is expected in ISO-format (`[YYYY]-[MM]-[DD]T[hh]:[mm]:[ss]`).
+
+#### Collections ####
+
+##### Named dict #####
+We have already seen the usage of a `Named dict`. In particular, it allows for
+mapping values (of potentially different types) to names that we know up front.
+This allows us to represent them as attributes of the snapshot (or an sub
+element of the snapshot). In general, if you know the values of all of the keys
+up front, then a named dict is the right container for you.
+
+```python
+from configsuite import types
+from configsuite import MetaKeys as MK
+
+schema = {
+    MK.Type: types.NamedDict,
+    MK.Content: {
+        "owner": {
+            MK.Type: types.NamedDict,
+            MK.Content: {
+                "name": {MK.Type: types.String},
+                "credit": {MK.Type: types.Integer},
+                "insured": {MK.Type: types.Bool},
+            },
+        },
+        "car": {
+            MK.Type: types.NamedDict,
+            MK.Content: {
+                "brand": {MK.Type: types.String},
+                "first_registered": {MK.Type: types.Date}
+            },
+        },
+    },
+}
+```
+
+The above example describes a configuration describing both an `owner` and a
+`car`. For the `owner` the `name`, `credit` and whether she is `insured` is to
+be specified, while for the `car` the `brand` and date it was
+`first_registered` is specified. A valid configuration could look something
+like this:
+
+```yaml
+owner:
+  name: Donald Duck
+  credit: -1000
+  insured: True
+
+car:
+  brand: Belchfire Runabout
+  first_registered: 1938-07-01
+```
+
+And now, we could validate and access the data as follows:
+
+```python
+# ... configuration is loaded into 'input_config' ...
+
+suite = configsuite.ConfigSuite(input_config, schema)
+
+if suite.valid:
+    print("Name of owner is {}".format(suite.owner.name))
+    print("Car was first registered {}".format(suite.car.first_registered))
+```
+
+Notice that since keys in a named dict are made attributes in the snapshot,
+they all have to be valid Python variable names.
+
+##### List #####
+
+##### Dict #####
+
 
 #### Readable ####
 TODO
 
 #### Required values ####
+TODO
 
 #### Documentation generation ####
 TODO
@@ -127,22 +250,4 @@ TODO
 
 #### Transformations ####
 
-## Future ##
-Have a look at the epics and issues in the _GitHub_ (repository)[https://github.com/equinor/configsuite/issues].
 
-## Installation ##
-The simplest way to fetch the newest version of _Config Suite_ is via [PyPI](https://pypi.python.org/pypi/configsuite/).
-
-`pip install configsuite`
-
-## Developer guidelines ##
-Contributions to _Config Suite_ is very much welcome! Bug reports, feature requests and improvements to the documentation or code alike. However, if you are planning a bigger chunk of work or to introduce a concept, initiating a discussion in an issue is encouraged.
-
-#### Running the tests ####
-The tests can be executed with `python setup.py test`. Note that the code formatting tests will only be executed with Python `3.6` or higher.
-
-#### Code formatting ####
-The entire code base is formatted with [black](https://black.readthedocs.io/en/stable/).
-
-#### Pull request expectations ####
-We expect a well-written explanation for smaller PR's and a reference to an issue for larger contributions. In addition, we expect the tests to pass on all commits and the commit messages to be written in imperative style. For more on commit messages read [this](https://chris.beams.io/posts/git-commit/).
