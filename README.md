@@ -201,7 +201,7 @@ like this:
 
 ```yaml
 owner:
-  name: donald duck
+  name: Donald Duck
   credit: -1000
   insured: true
 
@@ -292,7 +292,7 @@ schema = {
 
 config = {
     "owner": {
-      "name": donald duck,
+      "name": Donald Duck,
       "credit": -1000,
       "insured": True,
     },
@@ -361,7 +361,36 @@ is for dictionaries with an unknown set of keys. Hence, processing them as
 key-value-pairs is the only rational thing to do.
 
 #### Readable ####
-TODO
+Recall the concept of configuration readiness from earlier. This meant that if
+one specified a value in the schema, one is to expect that that piece of data
+is indeed present in the snapshot. But what if the configuration feed to the
+suite is not valid? If the errors appear in basic types, one can still access
+all the data as expected (i.e. `config.snapshot.owner.name` from the car
+example above).  However, if a container is of the wrong type on cannot
+guarantee such a thing.  In particular, if we bring back the single-car example
+from above and consider the following configuration:
+
+```yaml
+owner:
+  name: Donald Duck
+  credit: -1000
+  insured: true
+
+car:
+  - my first car
+  - my second car
+```
+
+The `car` data is completely off and there is no way one could provide a
+reasonable value for `config.snapshor.car.brand`. In such scenarios the
+configuration is deemed _unreadable_. There is a special marker for this,
+namely `ConfigSuite.readable`. If `readable` is true, then the snapshot can be
+built and all the entire configuration can be accessed. However, if the suite
+is not `readable` and one tries to fetch the snapshot an `AssertionError` will
+be raised.
+
+Note that all valid suites also are readable. And that all unreadable suites
+also are invalid.
 
 #### Required values ####
 TODO
